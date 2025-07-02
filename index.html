@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Grid Preview</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #fafafa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .grid-item {
+            aspect-ratio: 1/1;
+            background: #e0e0e0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #e1306c;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Instagram Grid Preview</h1>
+        <div class="grid" id="instagram-grid">
+            <!-- Grid items will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch posts from Netlify Function
+        async function fetchPosts() {
+            try {
+                const response = await fetch('/.netlify/functions/get-posts');
+                const posts = await response.json();
+                
+                const grid = document.getElementById('instagram-grid');
+                grid.innerHTML = '';
+                
+                posts.forEach(post => {
+                    const gridItem = document.createElement('div');
+                    gridItem.className = 'grid-item';
+                    gridItem.innerHTML = `<img src="${post.image}" alt="${post.caption}" width="100%">`;
+                    grid.appendChild(gridItem);
+                });
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', fetchPosts);
+    </script>
+</body>
+</html>
